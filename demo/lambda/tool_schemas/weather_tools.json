@@ -1,0 +1,17 @@
+[
+  {
+    "name": "get_weather",
+    "description": "指定した場所（都市名）の現在の天気情報を取得します。気温、天候、湿度、風の情報を返します。",
+    "inputSchema": {
+      "type": "object",
+      "description": "天気情報取得のパラメータ",
+      "properties": {
+        "location": {
+          "type": "string",
+          "description": "場所の名前（都市名、例: 東京、大阪、札幌）"
+        }
+      },
+      "required": ["location"]
+    }
+  }
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "name": "get_schedule",
+    "description": "山下光洋のスケジュール（セミナー登壇、勉強会、コース実施など）を取得します。日付を指定すると該当日のみ、指定しないと直近の全件を返します。",
+    "inputSchema": {
+      "type": "object",
+      "description": "スケジュール取得のパラメータ",
+      "properties": {
+        "date": {
+          "type": "string",
+          "description": "日付（YYYY-MM-DD形式）。省略すると直近の全スケジュールを返す"
+        }
+      },
+      "required": []
+    }
+  }
+]

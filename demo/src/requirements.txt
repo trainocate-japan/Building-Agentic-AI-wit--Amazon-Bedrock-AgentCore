@@ -1,0 +1,16 @@
+# Strands Agent SDK
+strands-agents>=0.1.0
+strands-agents-tools>=0.1.0
+
+# AgentCore Runtime + Memory (strands-agents 統合含む)
+bedrock-agentcore[strands-agents]>=0.1.0
+
+# Observability (Runtime が自動計装で使用)
+aws-opentelemetry-distro>=0.10.0
+
+# MCP / Gateway 接続
+mcp>=1.0.0
+mcp-proxy-for-aws>=0.1.0
+
+# AWS SDK
+boto3>=1.35.0

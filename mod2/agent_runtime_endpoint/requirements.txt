@@ -1,0 +1,15 @@
+# Strands Agent SDK
+strands-agents>=0.1.0
+
+# AgentCore Runtime（/invocations, /ping を自動構成）
+bedrock-agentcore[strands-agents]>=0.1.0
+
+# Observability（OTel 自動計装）
+aws-opentelemetry-distro>=0.10.0
+
+# AWS SDK
+boto3>=1.35.0
+
+# FastAPI 版を使う場合のみ必要
+fastapi>=0.100.0
+uvicorn>=0.20.0
