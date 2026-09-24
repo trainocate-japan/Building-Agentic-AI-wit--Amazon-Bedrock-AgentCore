@@ -154,9 +154,11 @@ def run(playwright: Playwright):
     with browser_session('us-west-2') as client:
         ws_url, headers = client.generate_ws_headers()
 
-        # ローカルでLive Viewサーバーを起動
+        # ローカルでLive Viewサーバーを起動（ポート8005でHTTPプロキシを立てる）
+        # open_browser=False にして自動では開かず、URLを自分でログ出力する
         viewer = BrowserViewerServer(client, port=8005)
-        viewer_url = viewer.start(open_browser=True)
+        viewer_url = viewer.start(open_browser=False)
+        print(f"Live View: {viewer_url}")  # このURLをブラウザで開くとライブ映像を確認できる
 
         # Playwright で接続
         chromium: BrowserType = playwright.chromium
@@ -179,6 +181,23 @@ def run(playwright: Playwright):
 with sync_playwright() as playwright:
     run(playwright)
 ```
+
+#### Live View Server とは
+
+AgentCore のブラウザは分離されたコンテナ内で動作するため、Playwright のコード（`page.goto()` やクリックなど）を実行しても、その様子は手元では見えません。`BrowserViewerServer`（Live View Server）は、このクラウド上のブラウザセッションのライブ映像ストリームを、ローカルの HTTP サーバー（上記では `http://localhost:8005`）へプロキシし、ブラウザで開いてリアルタイムに監視できるようにするものです。主な用途は次の通りです。
+
+- **デバッグ・観察**: エージェントがブラウザ上で何をしているかを目で確認する
+- **デモ・プレゼン**: 操作の様子をそのまま見せる
+- **人間の介入**: 必要に応じて操作を引き取る（take/release control）
+
+`viewer.start()` の引数と戻り値の扱いに注意してください。
+
+- `open_browser=True`（デフォルト）にすると、`start()` の内部で自動的に OS の既定ブラウザが開くため、戻り値の `viewer_url` を使わなくても映像が表示されます。この場合、変数 `viewer_url` は未使用になります。
+- 上記の例のように `open_browser=False` にすると自動では開かないので、戻り値の `viewer_url` を `print` でログ出力し、そのURLを手動でブラウザに貼り付けて確認します。CI やヘッドレス環境など、自動でブラウザを開けない状況で有効です。
+
+なお、末尾の `time.sleep(120)` は、この Live View で操作を眺める時間を確保するためのもので、Live View Server とセットの意図です。
+
+> ローカルの Live View Server を立てなくても、[AgentCore コンソール](https://console.aws.amazon.com/bedrock-agentcore/home#) の **「View live session」** から同じライブ映像を確認できます（後述の「Live View で確認する方法」を参照）。ローカルサーバー版は、コンソールを開かずコード実行の流れの中で確認したいとき用の選択肢です。
 
 ### 4. カスタムブラウザの作成（録画機能付き）
 
